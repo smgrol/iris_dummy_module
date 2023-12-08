@@ -17,7 +17,7 @@ Help()
 Run()
 {
     echo "[BUILDnPUSH2IRIS] Starting the build and push process.."
-    SEARCH_DIR='./dist'
+    SEARCH_DIR='./iris-module-interface'
     get_recent_file () {
         FILE=$(ls -Art1 ${SEARCH_DIR} | tail -n 1)
         if [ ! -f ${FILE} ]; then
@@ -44,12 +44,14 @@ Run()
     docker restart $container_id
 
     if [ "$a_Flag" = true ] ; then
+        echo "[BUILDnPUSH2IRIS] Get worker container id"
+        container_id=$(docker container ls  | grep iris | grep worker | awk '{print $1}')
         echo "[BUILDnPUSH2IRIS] Copy module file to app container.."
-        docker cp $latest iris-web-app-1:/iriswebapp/dependencies/$module
+        docker cp $latest $container_id:/iriswebapp/dependencies/$module
         echo "[BUILDnPUSH2IRIS] Installing module in app container.."
-        docker exec -it iris-web-app-1 /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
+        docker exec -it $container_id /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
         echo "[BUILDnPUSH2IRIS] Restarting app container.."
-        docker restart iris-web-app-1
+        docker restart $container_id
     fi
 
     echo "[BUILDnPUSH2IRIS] Completed!"
