@@ -34,12 +34,14 @@ Run()
     module=${latest#"./dist/"}
 
     echo "[BUILDnPUSH2IRIS] Found latest module file: $latest"
+    echo "[BUILDnPUSH2IRIS] Get worker container id"
+    container_id=$(docker container ls  | grep iris | grep worker | awk '{print $1}')
     echo "[BUILDnPUSH2IRIS] Copy module file to worker container.."
-    docker cp $latest iris-web-worker-1:/iriswebapp/dependencies/$module
+    docker cp $latest $container_id:/iriswebapp/dependencies/$module
     echo "[BUILDnPUSH2IRIS] Installing module in worker container.."
-    docker exec -it iris-web-worker-1 /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
+    docker exec -it $container_id /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
     echo "[BUILDnPUSH2IRIS] Restarting worker container.."
-    docker restart iris-web-worker-1
+    docker restart $container_id
 
     if [ "$a_Flag" = true ] ; then
         echo "[BUILDnPUSH2IRIS] Copy module file to app container.."
