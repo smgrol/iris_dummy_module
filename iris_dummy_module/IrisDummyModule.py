@@ -2,7 +2,7 @@
 
 # Import the IrisInterface class
 from iris_interface.IrisModuleInterface import IrisModuleInterface
-import iris_dummy_module.IrisDummyConfigg as interface_conf
+import iris_dummy_module.IrisDummyConfig as interface_conf
 
 # Create our module class
 class IrisDummyModule(IrisModuleInterface):

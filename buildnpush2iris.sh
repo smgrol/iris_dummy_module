@@ -37,21 +37,25 @@ Run()
 
     echo "[BUILDnPUSH2IRIS] Found latest module file: $latest"
     echo "[BUILDnPUSH2IRIS] Copy module file to worker container.."
-    docker cp $latest df37b5cf6336:/iriswebapp/dependencies/$module
+    echo "Get worker container ID"
+    worker_id=${docker container ls | grep '_worker\.' | awk '{print $1}'}
+    # echo "Get app container ID"
+    # app_id=${docker container ls | grep '_app\.' | awk '{print $1}'}
+
+    docker cp $latest worker_id:/iriswebapp/dependencies/$module
     echo "[BUILDnPUSH2IRIS] Installing module in worker container.."
-    docker exec -it df37b5cf6336 /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
+    docker exec -it worker_id /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
     echo "[BUILDnPUSH2IRIS] Restarting worker container.."
-    docker restart df37b5cf6336
+    docker restart worker_id
 
-    if [ "$a_Flag" = true ] ; then
-        echo "[BUILDnPUSH2IRIS] Copy module file to app container.."
-        docker cp $latest a3a61a850a68:/iriswebapp/dependencies/$module
-        echo "[BUILDnPUSH2IRIS] Installing module in app container.."
-        docker exec -it a3a61a850a68 /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
-        echo "[BUILDnPUSH2IRIS] Restarting app container.."
-        docker restart a3a61a850a68
-    fi
-
+    # if [ "$a_Flag" = true ] ; then
+    #     echo "[BUILDnPUSH2IRIS] Copy module file to app container.."
+    #     docker cp $latest a3a61a850a68:/iriswebapp/dependencies/$module
+    #     echo "[BUILDnPUSH2IRIS] Installing module in app container.."
+    #     docker exec -it a3a61a850a68 /bin/sh -c "pip3 install dependencies/$module --force-reinstall"
+    #     echo "[BUILDnPUSH2IRIS] Restarting app container.."
+    #     docker restart a3a61a850a68
+    # fi
     echo "[BUILDnPUSH2IRIS] Completed!"
 }
 
