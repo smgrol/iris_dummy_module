@@ -16,22 +16,24 @@ Help()
 
 Run()
 {
-    echo "[BUILDnPUSH2IRIS] Starting the build and push process.."
-    SEARCH_DIR='./iris-module-interface'
-    get_recent_file () {
-        FILE=$(ls -Art1 ${SEARCH_DIR} | tail -n 1)
-        if [ ! -f ${FILE} ]; then
-            SEARCH_DIR="${SEARCH_DIR}/${FILE}"
-            get_recent_file
-        fi
-        echo $FILE
-        exit
-    }
+echo "[BUILDnPUSH2IRIS] Starting the build and push process.."
+SEARCH_DIR='.build'
+get_recent_file () {
+    FILE=$(ls -Art1 ${SEARCH_DIR} | tail -n 1)
+    if [ ! -f ${FILE} ]; then
+        SEARCH_DIR="${SEARCH_DIR}/${FILE}"
+        get_recent_file
+    fi
+    echo $FILE
+    exit
+}
 
-    python3 setup.py bdist_wheel
-
-    latest=$(get_recent_file)
-    module=${latest#"./dist/"}
+python3 setup.py bdist_wheel
+echo $get_recent_file
+latest=$(get_recent_file)
+module=${latest#"./dist/"}
+echo $latest
+echo $module
 
     echo "[BUILDnPUSH2IRIS] Found latest module file: $latest"
     echo "[BUILDnPUSH2IRIS] Get worker container id"

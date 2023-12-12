@@ -28,10 +28,10 @@ CURR_DIR = pathlib.Path(__file__).parent
 README = (CURR_DIR / "README.md").read_text()
 
 setuptools.setup(
-     name='iris_interface',
-     version='1.2.0',
-     packages=['iris_interface'],
-     author="DFIR-IRIS - Airbus CyberSecurity",
+     name='iris_dummy_module',
+     version='1.0.0',
+     packages=['iris_dummy_module'],
+     author="me",
      author_email="contact@dfir-iris.org",
      description="An interface for Iris modules",
      long_description=README,
